@@ -29,7 +29,8 @@ export class FriendsService implements IFriendsService {
   }
 
   findFriendById(id: number): Promise<Friend> {
-    return this.friendsRepository.findOne(id, {
+    return this.friendsRepository.findOne({
+      where: { id: id },
       relations: [
         'sender',
         'receiver',

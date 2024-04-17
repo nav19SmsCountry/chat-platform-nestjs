@@ -31,7 +31,7 @@ export class GroupMessageController {
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
-  @Throttle(5, 10)
+  @Throttle({ default: { limit: 3, ttl: 10 } })
   @UseInterceptors(
     FileFieldsInterceptor([
       {

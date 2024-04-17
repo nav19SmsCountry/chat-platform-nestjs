@@ -77,9 +77,11 @@ export class GroupMessageService implements IGroupMessageService {
     if (!group)
       throw new HttpException('Group not found', HttpStatus.BAD_REQUEST);
     const message = await this.groupMessageRepository.findOne({
-      id: params.messageId,
-      author: { id: params.userId },
-      group: { id: params.groupId },
+      where: {
+        id: params.messageId,
+        author: { id: params.userId },
+        group: { id: params.groupId },
+      },
     });
 
     if (!message)

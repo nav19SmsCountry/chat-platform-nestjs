@@ -79,9 +79,8 @@ export class FriendRequestService implements IFriendRequestService {
     if (friendRequest.receiver.id !== userId)
       throw new FriendRequestException();
     friendRequest.status = 'accepted';
-    const updatedFriendRequest = await this.friendRequestRepository.save(
-      friendRequest,
-    );
+    const updatedFriendRequest =
+      await this.friendRequestRepository.save(friendRequest);
     const newFriend = this.friendRepository.create({
       sender: friendRequest.sender,
       receiver: friendRequest.receiver,
@@ -119,8 +118,9 @@ export class FriendRequestService implements IFriendRequestService {
   }
 
   findById(id: number): Promise<FriendRequest> {
-    return this.friendRequestRepository.findOne(id, {
-      relations: ['receiver', 'sender'],
+    return this.friendRequestRepository.findOne({
+      where: { id: id },
+      relations: ['sender', 'receiver'],
     });
   }
 }

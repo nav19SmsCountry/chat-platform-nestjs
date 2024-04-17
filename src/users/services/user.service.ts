@@ -19,7 +19,9 @@ export class UserService implements IUserService {
 
   async createUser(userDetails: CreateUserDetails) {
     const existingUser = await this.userRepository.findOne({
-      username: userDetails.username,
+      where: {
+        username: userDetails.username,
+      },
     });
     if (existingUser)
       throw new HttpException('User already exists', HttpStatus.CONFLICT);
@@ -42,9 +44,17 @@ export class UserService implements IUserService {
       'id',
     ];
     const selectionsWithPassword: (keyof User)[] = [...selections, 'password'];
-    return this.userRepository.findOne(params, {
+    return this.userRepository.findOne({
+      where: { id: params.id, email: params.email, username: params.username },
       select: options?.selectAll ? selectionsWithPassword : selections,
-      relations: ['profile', 'presence', 'peer'],
+      relations: [
+        'sender',
+        'receiver',
+        'sender.profile',
+        'sender.presence',
+        'receiver.profile',
+        'receiver.presence',
+      ],
     });
   }
 

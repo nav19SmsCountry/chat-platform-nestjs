@@ -10,7 +10,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { SkipThrottle, Throttle } from '@nestjs/throttler';
+import { SkipThrottle, Throttle, ThrottlerModuleOptions, ThrottlerOptions } from '@nestjs/throttler';
 import { Routes, ServerEvents, Services } from '../utils/constants';
 import { AuthUser } from '../utils/decorators';
 import { User } from '../utils/typeorm';
@@ -30,7 +30,7 @@ export class FriendRequestController {
     return this.friendRequestService.getFriendRequests(user.id);
   }
 
-  @Throttle(3, 10)
+  @Throttle({ default: { limit: 3, ttl: 10 } })
   @Post()
   async createFriendRequest(
     @AuthUser() user: User,
@@ -42,7 +42,7 @@ export class FriendRequestController {
     return friendRequest;
   }
 
-  @Throttle(3, 10)
+  @Throttle({ default: { limit: 3, ttl: 10 } })
   @Patch(':id/accept')
   async acceptFriendRequest(
     @AuthUser() { id: userId }: User,
@@ -53,7 +53,7 @@ export class FriendRequestController {
     return response;
   }
 
-  @Throttle(3, 10)
+  @Throttle({ default: { limit: 3, ttl: 10 } })
   @Delete(':id/cancel')
   async cancelFriendRequest(
     @AuthUser() { id: userId }: User,
@@ -64,7 +64,7 @@ export class FriendRequestController {
     return response;
   }
 
-  @Throttle(3, 10)
+  @Throttle({ default: { limit: 3, ttl: 10 } })
   @Patch(':id/reject')
   async rejectFriendRequest(
     @AuthUser() { id: userId }: User,

@@ -71,7 +71,9 @@ export class MessageService implements IMessageService {
     const conversation = await this.conversationService.getMessages(msgParams);
     if (!conversation) throw new ConversationNotFoundException();
     const findMessageParams = buildFindMessageParams(params);
-    const message = await this.messageRepository.findOne(findMessageParams);
+    const message = await this.messageRepository.findOne({
+      where: { id: findMessageParams.id },
+    });
     if (!message) throw new CannotDeleteMessage();
     if (conversation.lastMessageSent.id !== message.id)
       return this.messageRepository.delete({ id: message.id });
